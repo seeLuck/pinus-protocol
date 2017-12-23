@@ -1,6 +1,6 @@
 {
   "name": "pomelo-protocol",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "private": false,
   "main": "./dist/protocol",
   "types": "./dist/protocol.d.ts",

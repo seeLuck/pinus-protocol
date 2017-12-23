@@ -131,7 +131,7 @@ export namespace Package
    * @param  {ByteArray} body   body content in bytes
    * @return {ByteArray}        new byte array that contains encode result
    */
-  export function encode(type, body)
+  export function encode(type, body ?: any)
   {
     var length = body ? body.length : 0;
     var buffer = new ByteArray(PKG_HEAD_BYTES + length);
@@ -193,7 +193,7 @@ export namespace Message
    * @param  {Buffer} msg           message body bytes
    * @return {Buffer}               encode result
    */
-  export function encode(id, type, compressRoute, route, msg, compressGzip)
+  export function encode(id, type, compressRoute, route, msg, compressGzip ?: boolean)
   {
     // caculate message max length
     var idBytes = msgHasId(type) ? caculateMsgIdBytes(id) : 0;

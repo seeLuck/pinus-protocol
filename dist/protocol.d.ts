@@ -42,7 +42,7 @@ export declare namespace Package {
      * @param  {ByteArray} body   body content in bytes
      * @return {ByteArray}        new byte array that contains encode result
      */
-    function encode(type: any, body: any): any;
+    function encode(type: any, body?: any): any;
     /**
      * Package protocol decode.
      * See encode for package format.
@@ -67,7 +67,7 @@ export declare namespace Message {
      * @param  {Buffer} msg           message body bytes
      * @return {Buffer}               encode result
      */
-    function encode(id: any, type: any, compressRoute: any, route: any, msg: any, compressGzip: any): any;
+    function encode(id: any, type: any, compressRoute: any, route: any, msg: any, compressGzip?: boolean): any;
     /**
      * Message protocol decode.
      *
