@@ -20,34 +20,8 @@ var Protocol;
      * socketio current support string
      */
     function strencode(str) {
-        if (typeof Buffer !== "undefined" && ByteArray === Buffer) {
-            // encoding defaults to 'utf8'
-            return (new Buffer(str));
-        }
-        else {
-            var byteArray = new ByteArray(str.length * 3);
-            var offset = 0;
-            for (var i = 0; i < str.length; i++) {
-                var charCode = str.charCodeAt(i);
-                var codes = null;
-                if (charCode <= 0x7f) {
-                    codes = [charCode];
-                }
-                else if (charCode <= 0x7ff) {
-                    codes = [0xc0 | (charCode >> 6), 0x80 | (charCode & 0x3f)];
-                }
-                else {
-                    codes = [0xe0 | (charCode >> 12), 0x80 | ((charCode & 0xfc0) >> 6), 0x80 | (charCode & 0x3f)];
-                }
-                for (var j = 0; j < codes.length; j++) {
-                    byteArray[offset] = codes[j];
-                    ++offset;
-                }
-            }
-            var _buffer = new ByteArray(offset);
-            copyArray(_buffer, 0, byteArray, 0, offset);
-            return _buffer;
-        }
+        // encoding defaults to 'utf8'
+        return new Buffer(str);
     }
     Protocol.strencode = strencode;
     ;
@@ -57,36 +31,10 @@ var Protocol;
      * return Message Object
      */
     function strdecode(buffer) {
-        if (typeof Buffer !== "undefined" && ByteArray === Buffer) {
-            // encoding defaults to 'utf8'
-            return buffer.toString();
-        }
-        else {
-            var bytes = new ByteArray(buffer);
-            var array = [];
-            var offset = 0;
-            var charCode = 0;
-            var end = bytes.length;
-            while (offset < end) {
-                if (bytes[offset] < 128) {
-                    charCode = bytes[offset];
-                    offset += 1;
-                }
-                else if (bytes[offset] < 224) {
-                    charCode = ((bytes[offset] & 0x1f) << 6) + (bytes[offset + 1] & 0x3f);
-                    offset += 2;
-                }
-                else {
-                    charCode = ((bytes[offset] & 0x0f) << 12) + ((bytes[offset + 1] & 0x3f) << 6) + (bytes[offset + 2] & 0x3f);
-                    offset += 3;
-                }
-                array.push(charCode);
-            }
-            return String.fromCharCode.apply(null, array);
-        }
+        // encoding defaults to 'utf8'
+        return buffer.toString();
     }
     Protocol.strdecode = strdecode;
-    ;
 })(Protocol = exports.Protocol || (exports.Protocol = {}));
 var Package;
 (function (Package) {
@@ -114,12 +62,12 @@ var Package;
      * Body: body length bytes
      *
      * @param  {Number}    type   package type
-     * @param  {ByteArray} body   body content in bytes
-     * @return {ByteArray}        new byte array that contains encode result
+     * @param  {Buffer} body   body content in bytes
+     * @return {Buffer}        new byte array that contains encode result
      */
     function encode(type, body) {
         var length = body ? body.length : 0;
-        var buffer = new ByteArray(PKG_HEAD_BYTES + length);
+        var buffer = new Buffer(PKG_HEAD_BYTES + length);
         var index = 0;
         buffer[index++] = type & 0xff;
         buffer[index++] = (length >> 16) & 0xff;
@@ -136,18 +84,18 @@ var Package;
      * Package protocol decode.
      * See encode for package format.
      *
-     * @param  {ByteArray} buffer byte array containing package content
+     * @param  {Buffer} buffer byte array containing package content
      * @return {Object}           {type: package type, buffer: body byte array}
      */
     function decode(buffer) {
         var offset = 0;
-        var bytes = new ByteArray(buffer);
+        var bytes = new Buffer(buffer);
         var length = 0;
         var rs = [];
         while (offset < bytes.length) {
             var type = bytes[offset++];
             length = ((bytes[offset++]) << 16 | (bytes[offset++]) << 8 | bytes[offset++]) >>> 0;
-            var body = length ? new ByteArray(length) : null;
+            var body = length ? new Buffer(length) : null;
             if (body) {
                 copyArray(body, 0, bytes, offset, length);
             }
@@ -200,7 +148,7 @@ var Message;
         if (msg) {
             msgLen += msg.length;
         }
-        var buffer = new ByteArray(msgLen);
+        var buffer = new Buffer(msgLen);
         var offset = 0;
         // add flag
         offset = encodeMsgFlag(type, compressRoute, buffer, offset, compressGzip);
@@ -227,7 +175,7 @@ var Message;
      * @return {Object}            message object
      */
     function decode(buffer) {
-        var bytes = new ByteArray(buffer);
+        var bytes = new Buffer(buffer);
         var bytesLen = bytes.length || bytes.byteLength;
         var offset = 0;
         var id = 0;
@@ -256,7 +204,7 @@ var Message;
             else {
                 var routeLen = bytes[offset++];
                 if (routeLen) {
-                    route = new ByteArray(routeLen);
+                    route = new Buffer(routeLen);
                     copyArray(route, 0, bytes, offset, routeLen);
                     route = Protocol.strdecode(route);
                 }
@@ -268,7 +216,7 @@ var Message;
         }
         // parse body
         var bodyLen = bytesLen - offset;
-        var body = new ByteArray(bodyLen);
+        var body = new Buffer(bodyLen);
         copyArray(body, 0, bytes, offset, bodyLen);
         return {
             'id': id, 'type': type, 'compressRoute': compressRoute,

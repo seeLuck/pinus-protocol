@@ -39,15 +39,15 @@ export declare namespace Package {
      * Body: body length bytes
      *
      * @param  {Number}    type   package type
-     * @param  {ByteArray} body   body content in bytes
-     * @return {ByteArray}        new byte array that contains encode result
+     * @param  {Buffer} body   body content in bytes
+     * @return {Buffer}        new byte array that contains encode result
      */
     function encode(type: any, body?: any): any;
     /**
      * Package protocol decode.
      * See encode for package format.
      *
-     * @param  {ByteArray} buffer byte array containing package content
+     * @param  {Buffer} buffer byte array containing package content
      * @return {Object}           {type: package type, buffer: body byte array}
      */
     function decode(buffer: any): any;
