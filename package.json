@@ -1,15 +1,19 @@
 {
-  "name": "pomelo-protocol",
-  "version": "1.0.4",
-  "private": false,
-  "main": "./dist/protocol",
-  "types": "./dist/protocol.d.ts",
-  "dependencies": {
-    "@types/node": "^8.5.2"
-  },
-  "devDependencies": {
-    "should": ">=0.0.1",
-    "mocha": ">=0.0.1",
-    "jscoverage": ">=0.0.1"
-  }
+ "name": "pomelo-protocol",
+ "version": "1.0.4",
+ "private": false,
+ "main": "./dist/protocol",
+ "types": "./dist/protocol.d.ts",
+ "scripts": {
+  "build": "node_modules/.bin/tsc"
+ },
+ "dependencies": {
+  "@types/node": "^8.5.2"
+ },
+ "devDependencies": {
+  "should": ">=0.0.1",
+  "mocha": ">=0.0.1",
+  "jscoverage": ">=0.0.1",
+  "typescript": "^2.6.2"
+ }
 }

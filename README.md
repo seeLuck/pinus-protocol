@@ -1,4 +1,4 @@
-#pomelo-protocol
+#pinus-protocol
 
 Encode and decode binary protocol for Pomelo framework.
 
