@@ -1,6 +1,6 @@
 {
- "name": "pomelo-protocol",
- "version": "1.0.4",
+ "name": "pinus-protocol",
+ "version": "1.0.0",
  "private": false,
  "main": "./dist/protocol",
  "types": "./dist/protocol.d.ts",
