@@ -1,3 +1,4 @@
+/// <reference types="node" />
 export declare namespace Protocol {
     /**
      * pomele client encode
@@ -6,20 +7,20 @@ export declare namespace Protocol {
      * msg message body
      * socketio current support string
      */
-    function strencode(str: any): any;
+    function strencode(str: string): any;
     /**
      * client decode
      * msg String data
      * return Message Object
      */
-    function strdecode(buffer: any): any;
+    function strdecode(buffer: object): string;
 }
 export declare namespace Package {
-    var TYPE_HANDSHAKE: number;
-    var TYPE_HANDSHAKE_ACK: number;
-    var TYPE_HEARTBEAT: number;
-    var TYPE_DATA: number;
-    var TYPE_KICK: number;
+    let TYPE_HANDSHAKE: number;
+    let TYPE_HANDSHAKE_ACK: number;
+    let TYPE_HEARTBEAT: number;
+    let TYPE_DATA: number;
+    let TYPE_KICK: number;
     /**
      * Package protocol encode.
      *
@@ -42,7 +43,7 @@ export declare namespace Package {
      * @param  {Buffer} body   body content in bytes
      * @return {Buffer}        new byte array that contains encode result
      */
-    function encode(type: any, body?: any): any;
+    function encode(type: number, body?: Buffer): any;
     /**
      * Package protocol decode.
      * See encode for package format.
@@ -50,13 +51,19 @@ export declare namespace Package {
      * @param  {Buffer} buffer byte array containing package content
      * @return {Object}           {type: package type, buffer: body byte array}
      */
-    function decode(buffer: any): any;
+    function decode(buffer: Buffer): {
+        'type': any;
+        'body': any;
+    } | {
+        'type': any;
+        'body': any;
+    }[];
 }
 export declare namespace Message {
-    var TYPE_REQUEST: number;
-    var TYPE_NOTIFY: number;
-    var TYPE_RESPONSE: number;
-    var TYPE_PUSH: number;
+    let TYPE_REQUEST: number;
+    let TYPE_NOTIFY: number;
+    let TYPE_RESPONSE: number;
+    let TYPE_PUSH: number;
     /**
      * Message protocol encode.
      *
@@ -67,18 +74,18 @@ export declare namespace Message {
      * @param  {Buffer} msg           message body bytes
      * @return {Buffer}               encode result
      */
-    function encode(id: any, type: any, compressRoute: any, route: any, msg: any, compressGzip?: boolean): any;
+    function encode(id: number, type: number, compressRoute: boolean, route: any, msg: Buffer, compressGzip?: boolean): any;
     /**
      * Message protocol decode.
      *
      * @param  {Buffer|Uint8Array} buffer message bytes
      * @return {Object}            message object
      */
-    function decode(buffer: any): {
+    function decode(buffer: Buffer): {
         'id': number;
         'type': number;
         'compressRoute': number;
-        'route': any;
+        'route': string | number;
         'body': any;
         'compressGzip': number;
     };

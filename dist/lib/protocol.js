@@ -1,15 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var PKG_HEAD_BYTES = 4;
-var MSG_FLAG_BYTES = 1;
-var MSG_ROUTE_CODE_BYTES = 2;
-var MSG_ID_MAX_BYTES = 5;
-var MSG_ROUTE_LEN_BYTES = 1;
-var MSG_ROUTE_CODE_MAX = 0xffff;
-var MSG_COMPRESS_ROUTE_MASK = 0x1;
-var MSG_COMPRESS_GZIP_MASK = 0x1;
-var MSG_COMPRESS_GZIP_ENCODE_MASK = 1 << 4;
-var MSG_TYPE_MASK = 0x7;
+let PKG_HEAD_BYTES = 4;
+let MSG_FLAG_BYTES = 1;
+let MSG_ROUTE_CODE_BYTES = 2;
+let MSG_ID_MAX_BYTES = 5;
+let MSG_ROUTE_LEN_BYTES = 1;
+let MSG_ROUTE_CODE_MAX = 0xffff;
+let MSG_COMPRESS_ROUTE_MASK = 0x1;
+let MSG_COMPRESS_GZIP_MASK = 0x1;
+let MSG_COMPRESS_GZIP_ENCODE_MASK = 1 << 4;
+let MSG_TYPE_MASK = 0x7;
 var Protocol;
 (function (Protocol) {
     /**
@@ -66,9 +66,9 @@ var Package;
      * @return {Buffer}        new byte array that contains encode result
      */
     function encode(type, body) {
-        var length = body ? body.length : 0;
-        var buffer = new Buffer(PKG_HEAD_BYTES + length);
-        var index = 0;
+        let length = body ? body.length : 0;
+        let buffer = new Buffer(PKG_HEAD_BYTES + length);
+        let index = 0;
         buffer[index++] = type & 0xff;
         buffer[index++] = (length >> 16) & 0xff;
         buffer[index++] = (length >> 8) & 0xff;
@@ -88,14 +88,14 @@ var Package;
      * @return {Object}           {type: package type, buffer: body byte array}
      */
     function decode(buffer) {
-        var offset = 0;
-        var bytes = new Buffer(buffer);
-        var length = 0;
-        var rs = [];
+        let offset = 0;
+        let bytes = new Buffer(buffer);
+        let length = 0;
+        let rs = [];
         while (offset < bytes.length) {
-            var type = bytes[offset++];
+            let type = bytes[offset++];
             length = ((bytes[offset++]) << 16 | (bytes[offset++]) << 8 | bytes[offset++]) >>> 0;
-            var body = length ? new Buffer(length) : null;
+            let body = length ? new Buffer(length) : null;
             if (body) {
                 copyArray(body, 0, bytes, offset, length);
             }
@@ -125,8 +125,8 @@ var Message;
      */
     function encode(id, type, compressRoute, route, msg, compressGzip) {
         // caculate message max length
-        var idBytes = msgHasId(type) ? caculateMsgIdBytes(id) : 0;
-        var msgLen = MSG_FLAG_BYTES + idBytes;
+        let idBytes = msgHasId(type) ? caculateMsgIdBytes(id) : 0;
+        let msgLen = MSG_FLAG_BYTES + idBytes;
         if (msgHasRoute(type)) {
             if (compressRoute) {
                 if (typeof route !== 'number') {
@@ -148,8 +148,8 @@ var Message;
         if (msg) {
             msgLen += msg.length;
         }
-        var buffer = new Buffer(msgLen);
-        var offset = 0;
+        let buffer = new Buffer(msgLen);
+        let offset = 0;
         // add flag
         offset = encodeMsgFlag(type, compressRoute, buffer, offset, compressGzip);
         // add message id
@@ -175,20 +175,20 @@ var Message;
      * @return {Object}            message object
      */
     function decode(buffer) {
-        var bytes = new Buffer(buffer);
-        var bytesLen = bytes.length || bytes.byteLength;
-        var offset = 0;
-        var id = 0;
-        var route = null;
+        let bytes = new Buffer(buffer);
+        let bytesLen = bytes.length || bytes.byteLength;
+        let offset = 0;
+        let id = 0;
+        let route = null;
         // parse flag
-        var flag = bytes[offset++];
-        var compressRoute = flag & MSG_COMPRESS_ROUTE_MASK;
-        var type = (flag >> 1) & MSG_TYPE_MASK;
-        var compressGzip = (flag >> 4) & MSG_COMPRESS_GZIP_MASK;
+        let flag = bytes[offset++];
+        let compressRoute = flag & MSG_COMPRESS_ROUTE_MASK;
+        let type = (flag >> 1) & MSG_TYPE_MASK;
+        let compressGzip = (flag >> 4) & MSG_COMPRESS_GZIP_MASK;
         // parse id
         if (msgHasId(type)) {
-            var m = 0;
-            var i = 0;
+            let m = 0;
+            let i = 0;
             do {
                 m = parseInt(bytes[offset]);
                 id += (m & 0x7f) << (7 * i);
@@ -202,7 +202,7 @@ var Message;
                 route = (bytes[offset++]) << 8 | bytes[offset++];
             }
             else {
-                var routeLen = bytes[offset++];
+                let routeLen = bytes[offset++];
                 if (routeLen) {
                     route = new Buffer(routeLen);
                     copyArray(route, 0, bytes, offset, routeLen);
@@ -215,8 +215,8 @@ var Message;
             }
         }
         // parse body
-        var bodyLen = bytesLen - offset;
-        var body = new Buffer(bodyLen);
+        let bodyLen = bytesLen - offset;
+        let body = new Buffer(bodyLen);
         copyArray(body, 0, bytes, offset, bodyLen);
         return {
             'id': id, 'type': type, 'compressRoute': compressRoute,
@@ -226,34 +226,34 @@ var Message;
     Message.decode = decode;
     ;
 })(Message = exports.Message || (exports.Message = {}));
-var copyArray = function (dest, doffset, src, soffset, length) {
+let copyArray = function (dest, doffset, src, soffset, length) {
     if ('function' === typeof src.copy) {
         // Buffer
         src.copy(dest, doffset, soffset, soffset + length);
     }
     else {
         // Uint8Array
-        for (var index = 0; index < length; index++) {
+        for (let index = 0; index < length; index++) {
             dest[doffset++] = src[soffset++];
         }
     }
 };
-var msgHasId = function (type) {
+let msgHasId = function (type) {
     return type === Message.TYPE_REQUEST || type === Message.TYPE_RESPONSE;
 };
-var msgHasRoute = function (type) {
+let msgHasRoute = function (type) {
     return type === Message.TYPE_REQUEST || type === Message.TYPE_NOTIFY ||
         type === Message.TYPE_PUSH;
 };
-var caculateMsgIdBytes = function (id) {
-    var len = 0;
+let caculateMsgIdBytes = function (id) {
+    let len = 0;
     do {
         len += 1;
         id >>= 7;
     } while (id > 0);
     return len;
 };
-var encodeMsgFlag = function (type, compressRoute, buffer, offset, compressGzip) {
+let encodeMsgFlag = function (type, compressRoute, buffer, offset, compressGzip) {
     if (type !== Message.TYPE_REQUEST && type !== Message.TYPE_NOTIFY &&
         type !== Message.TYPE_RESPONSE && type !== Message.TYPE_PUSH) {
         throw new Error('unkonw message type: ' + type);
@@ -264,10 +264,10 @@ var encodeMsgFlag = function (type, compressRoute, buffer, offset, compressGzip)
     }
     return offset + MSG_FLAG_BYTES;
 };
-var encodeMsgId = function (id, buffer, offset) {
+let encodeMsgId = function (id, buffer, offset) {
     do {
-        var tmp = id % 128;
-        var next = Math.floor(id / 128);
+        let tmp = id % 128;
+        let next = Math.floor(id / 128);
         if (next !== 0) {
             tmp = tmp + 128;
         }
@@ -276,7 +276,7 @@ var encodeMsgId = function (id, buffer, offset) {
     } while (id !== 0);
     return offset;
 };
-var encodeMsgRoute = function (compressRoute, route, buffer, offset) {
+let encodeMsgRoute = function (compressRoute, route, buffer, offset) {
     if (compressRoute) {
         if (route > MSG_ROUTE_CODE_MAX) {
             throw new Error('route number is overflow');
@@ -296,7 +296,7 @@ var encodeMsgRoute = function (compressRoute, route, buffer, offset) {
     }
     return offset;
 };
-var encodeMsgBody = function (msg, buffer, offset) {
+let encodeMsgBody = function (msg, buffer, offset) {
     copyArray(buffer, offset, msg, 0, msg.length);
     return offset + msg.length;
 };
