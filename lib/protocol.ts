@@ -134,7 +134,7 @@ export namespace Message
    * @param  {Buffer} msg           message body bytes
    * @return {Buffer}               encode result
    */
-  export function encode(id: number, type: number, compressRoute: boolean, route, msg: Buffer, compressGzip?: boolean)
+  export function encode(id: number, type: number, compressRoute: boolean, route: number&string&Buffer, msg: Buffer, compressGzip?: boolean)
   {
     // caculate message max length
     let idBytes = msgHasId(type) ? caculateMsgIdBytes(id) : 0;
@@ -339,7 +339,7 @@ let encodeMsgId = function (id: number, buffer: Buffer, offset: number)
   return offset;
 };
 
-let encodeMsgRoute = function (compressRoute: boolean, route, buffer: Buffer, offset: number)
+let encodeMsgRoute = function (compressRoute: boolean, route: number&string&Buffer, buffer: Buffer, offset: number)
 {
   if (compressRoute)
   {

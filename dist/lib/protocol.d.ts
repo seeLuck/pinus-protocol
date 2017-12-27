@@ -74,7 +74,7 @@ export declare namespace Message {
      * @param  {Buffer} msg           message body bytes
      * @return {Buffer}               encode result
      */
-    function encode(id: number, type: number, compressRoute: boolean, route: any, msg: Buffer, compressGzip?: boolean): any;
+    function encode(id: number, type: number, compressRoute: boolean, route: number & string & Buffer, msg: Buffer, compressGzip?: boolean): any;
     /**
      * Message protocol decode.
      *
